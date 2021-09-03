@@ -3,4 +3,16 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="purple_500">#076B4F</color>
+    <color name="purple_700">#1C90C5</color>
+    <color name="white">#aaa</color>
+    <color name="teal_200">#1BD8C2</color>
+    <color name="teal_700">#187348</color>
+    <color name="black">#000</color>
+    <color name="purple_200">#7929CA</color>
+
+
+
+
+
 </resources>
