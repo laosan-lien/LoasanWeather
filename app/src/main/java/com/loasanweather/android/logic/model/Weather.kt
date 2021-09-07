@@ -1,4 +1,5 @@
 package com.loasanweather.android.logic.model
 
-data class Weather(val realTime:RealTimeResponse.RealTime, val daily: DailyResponse.Daily)
-
+class Weather {
+    data class Weather(val realtime: RealtimeResponse.Realtime, val daily: DailyResponse.Daily)
+}

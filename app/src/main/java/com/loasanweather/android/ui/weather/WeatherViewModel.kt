@@ -6,9 +6,7 @@ import com.loasanweather.android.logic.Repository
 import com.loasanweather.android.logic.model.Location
 
 class WeatherViewModel : ViewModel() {
-
     private val locationLiveData = MutableLiveData<Location>()
-
     var locationLng = ""
 
     var locationLat = ""
@@ -22,5 +20,4 @@ class WeatherViewModel : ViewModel() {
     fun refreshWeather(lng: String, lat: String) {
         locationLiveData.value = Location(lng, lat)
     }
-
 }

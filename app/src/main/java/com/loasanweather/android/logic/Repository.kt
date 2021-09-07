@@ -1,12 +1,16 @@
 package com.loasanweather.android.logic
 
 
+import android.util.Log
 import androidx.lifecycle.liveData
+import com.loasanweather.android.logic.dao.PlaceDao
+import com.loasanweather.android.logic.model.Place
 import com.loasanweather.android.logic.model.Weather
 import com.loasanweather.android.logic.network.SunnyWeatherNetwork
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import java.lang.RuntimeException
 import kotlin.coroutines.CoroutineContext
 
 /**
@@ -14,9 +18,9 @@ import kotlin.coroutines.CoroutineContext
  */
 
 object Repository {
+    private const val TAG = "Repository"
     fun searchPlaces(query: String) = fire(Dispatchers.IO) {
-        val placeResponse =
-            SunnyWeatherNetwork().searchPlaces(query)//SunnyWeatherNetwork()的括号是否可以省略
+        val placeResponse = SunnyWeatherNetwork.searchPlaces(query)
         if (placeResponse.status == "ok") {
             val places = placeResponse.places
             Result.success(places)
@@ -27,28 +31,27 @@ object Repository {
 
     fun refreshWeather(lng: String, lat: String) = fire(Dispatchers.IO) {
         coroutineScope {
-            val deferredRealTime = async {
-                SunnyWeatherNetwork().getRealTimeWeather(lng, lat)
+            val deferredRealtime = async {
+                SunnyWeatherNetwork.getRealtimeWeather(lng, lat)
             }
             val deferredDaily = async {
-                SunnyWeatherNetwork().getDailyWeather(lng, lat)
+                SunnyWeatherNetwork.getDailyWeather(lng, lat)
             }
-            val realTimeResponse = deferredRealTime.await()//await（）方法是为了保证两个网络请求都能够执行完成
+            val realtimeResponse = deferredRealtime.await()
             val dailyResponse = deferredDaily.await()
-            if (realTimeResponse.status == "ok" && dailyResponse.status == "ok") {
+            if (realtimeResponse.status == "ok" && dailyResponse.status == "ok") {
                 val weather =
-                    Weather(realTimeResponse.result.realTime, dailyResponse.result.daily)
-                Result.success(weather);
+                    Weather.Weather(realtimeResponse.result.realtime, dailyResponse.result.daily)
+                Result.success(weather)
             } else {
                 Result.failure(
                     RuntimeException(
-                        "Realtime response status is${realTimeResponse.status}"
-                                + "daily response status is ${dailyResponse.status}"
+                        "realtime response status is ${realtimeResponse.status}" +
+                                "daily response status is ${dailyResponse.status}"
                     )
                 )
             }
         }
-
     }
 
     private fun <T> fire(context: CoroutineContext, block: suspend () -> Result<T>) =
@@ -59,5 +62,11 @@ object Repository {
                 Result.failure<T>(e)
             }
             emit(result)
+            Log.d("result2", "$result")
         }
+
+    fun savePlace(place: Place) = PlaceDao.savePlace(place)
+    fun getSavePlace() = PlaceDao.getSavedPlace()
+    fun isPlaceSaved() = PlaceDao.isPlaceSaved()
+
 }

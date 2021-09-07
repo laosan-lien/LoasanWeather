@@ -2,8 +2,7 @@ package com.loasanweather.android.logic.model
 
 import com.loasanweather.android.R
 
-class Sky(val info :String ,val icon: Int , val bg:Int)
-
+class Sky(val info: String, val icon: Int, val bg: Int)
 
 private val sky = mapOf(
     "CLEAR_DAY" to Sky("晴", R.drawable.ic_clear_day, R.drawable.bg_clear_day),
@@ -35,8 +34,9 @@ private val sky = mapOf(
     "MODERATE_HAZE" to Sky("中度雾霾", R.drawable.ic_moderate_haze, R.drawable.bg_fog),
     "HEAVY_HAZE" to Sky("重度雾霾", R.drawable.ic_heavy_haze, R.drawable.bg_fog),
     "FOG" to Sky("雾", R.drawable.ic_fog, R.drawable.bg_fog),
-    "DUST" to Sky("浮尘", R.drawable.ic_fog, R.drawable.bg_cloudy)
+    "DUST" to Sky("浮尘", R.drawable.ic_fog, R.drawable.bg_fog)
 )
-    fun getSky(skyCon:String):Sky{
-        return sky[skyCon]?:sky["CLEAR_DAY"]!!
-    }
+
+fun getSky(skycon: String): Sky {
+    return sky[skycon] ?: (sky["CLEAR_DAY"] ?: error(""))
+}
